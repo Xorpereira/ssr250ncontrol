@@ -1,0 +1,40 @@
+tell application "Terminal"
+	activate
+	
+	set targetWindow to 0
+	
+	if (count of windows) is greater than 0 then
+		repeat with currentWindow in windows
+			if currentWindow is not busy then
+				set targetWindow to currentWindow
+			end if
+		end repeat
+	else
+		do script ""
+		set targetWindow to window 1
+	end if
+	
+	-- Correr SS-R250N
+	set firstCommand to "/usr/local/bin/python3 [ss-r250nudpcontrol.py location] 5 [IP] ss"
+	do script firstCommand in targetWindow
+	
+	-- Abrir novo separador
+	tell application "System Events" to tell process "Terminal" to keystroke "t" using command down
+	
+	if (count of windows) is greater than 0 then
+		repeat with currentWindow in windows
+			if currentWindow is not busy then
+				set targetWindow to currentWindow
+			end if
+		end repeat
+	else
+		do script ""
+		set targetWindow to window 1
+	end if
+	
+	-- Correr HD-R1
+	set secondCommand to "/usr/local/bin/python3 [hd-r1udpcontrol.py location] 5 [IP] hd"
+	do script secondCommand in targetWindow
+	
+end tell
+tell application "QLab" to activate
